@@ -1,0 +1,238 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 POS — បញ្ជីផលិតផល</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background: #eef3f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container{
+            width: 85%;
+            margin: auto;
+        }
+
+        h1{
+            color: #0d2b52;
+        }
+
+        nav a{
+            margin-right: 15px;
+            text-decoration: none;
+            color: #2b6cb0;
+        }
+
+        .product-card{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            margin: 12px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-left{
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-left img{
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .product-info h2{
+            margin: 0;
+            color: #1565c0;
+        }
+
+        .product-info p{
+            margin: 3px 0;
+            color: gray;
+            font-size: 14px;
+        }
+
+        .price{
+            font-size: 22px;
+            font-weight: bold;
+            color: green;
+        }
+
+        .low{
+            color: red;
+            font-weight: bold;
+        }
+
+        .empty{
+            text-align: center;
+            color: gray;
+            font-style: italic;
+        }
+
+        .badge{
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🛒 បញ្ជីផលិតផល</h1>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <a href="/sales/products/">Products</a>
+        <a href="/sales/orders/">Orders</a>
+        <a href="/sales/orders/new/">＋ New Order</a>
+        <a href="/admin/">Admin</a>
+
+        <span style="float:right">
+            👤 {{ request.user.username }}
+
+            <form method="post" action="/accounts/logout/" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" style="background:none;border:none;color:#2b6cb0;cursor:pointer;">
+                    Log Out
+                </button>
+            </form>
+        </span>
+    </nav>
+
+    <!-- 🔥 DYNAMIC PRODUCTS FROM DATABASE -->
+    {% for product in products %}
+    <div class="product-card">
+
+        <div class="product-left">
+
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/default.png' %}" alt="No image">
+            {% endif %}
+
+            <div class="product-info">
+                <h2>{{ product.name }}</h2>
+
+                <span class="badge">{{ product.get_category_display }}</span>
+
+                {% if product.barcode %}
+                    <p>Barcode: {{ product.barcode }}</p>
+                {% endif %}
+
+                {% if product.stock <= 5 %}
+                    <p class="low">⚠️ ស្តុកទាប: {{ product.stock }}</p>
+                {% else %}
+                    <p>Stock: {{ product.stock }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="price">
+            ${{ product.price }}
+        </div>
+
+    </div>
+
+    {% empty %}
+        <p class="empty">មិនទាន់មានផលិតផលទេ — បន្ថែមក្នុង Admin</p>
+    {% endfor %}
+
+
+    <!-- 🔥 STATIC SAMPLE PRODUCTS (OPTIONAL DEMO SECTION) -->
+    <h2 style="margin-top:40px;">📦 Sample Products</h2>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/Coca.png' %}" alt="Coca">
+            <div class="product-info">
+                <h2>Coca</h2>
+                <p>Barcode: 01</p>
+                <p>Stock: 30</p>
+            </div>
+        </div>
+        <div class="price">$1.50</div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/Coconut.png' %}" alt="Coconut">
+            <div class="product-info">
+                <h2>Coconut</h2>
+                <p>Barcode: 133456789</p>
+                <p>Stock: 200</p>
+            </div>
+        </div>
+        <div class="price">$1.80</div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/Phone.png' %}" alt="Phone">
+            <div class="product-info">
+                <h2>Phone</h2>
+                <p>Barcode: 001</p>
+                <p>Stock: 10</p>
+            </div>
+        </div>
+        <div class="price">$500.00</div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/tea.png' %}" alt="Tea">
+            <div class="product-info">
+                <h2>Tea</h2>
+                <p>Barcode: 002</p>
+                <p>Stock: 15</p>
+            </div>
+        </div>
+        <div class="price">$2.00</div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/wireless.png' %}" alt="Wireless">
+            <div class="product-info">
+                <h2>Wireless</h2>
+                <p>Barcode: 003</p>
+                <p>Stock: 8</p>
+            </div>
+        </div>
+        <div class="price">$25.00</div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-left">
+            <img src="{% static 'images/usb-c.png' %}" alt="USB-C">
+            <div class="product-info">
+                <h2>USB-C</h2>
+                <p>Barcode: 004</p>
+                <p>Stock: 20</p>
+            </div>
+        </div>
+        <div class="price">$10.00</div>
+    </div>
+
+</div>
+
+</body>
+</html>

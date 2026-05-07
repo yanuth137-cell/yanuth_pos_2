@@ -1,0 +1,104 @@
+<!-- sales/templates/sales/product_list.html -->
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>🛒 POS — បញ្ជីផលិតផល</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f0f4f8; }
+        h1   { color: #1a202c; }
+        .product-card { background: white; border-radius: 10px; padding: 16px 20px; margin: 12px 0;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
+        .product-card h2 a { text-decoration: none; color: #2b6cb0; font-size: 1.1em; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;
+                 background: #ebf8ff; color: #2b6cb0; }
+        .price  { font-size: 1.3em; font-weight: bold; color: #276749; }
+        .stock  { font-size: 0.9em; color: #718096; }
+        .low    { color: #c53030; font-weight: bold; }
+        .empty  { color: #888; font-style: italic; }
+        nav a   { margin-right: 16px; color: #2b6cb0; }
+    </style>
+</head>
+<body>
+    <h1>🛒 បញ្ជីផលិតផល</h1>
+    <!-- Add this <nav> block to the top of product_list.html and order_list.html -->
+<nav>
+    <a href="/sales/products/">Products</a>
+    <a href="/sales/orders/">Orders</a>
+    <a href="/sales/orders/new/">＋ New Order</a>
+    <a href="/admin/">Admin</a>
+    <span style="float:right">
+        👤 {{ request.user.username }}
+        <form method="post" action="/accounts/logout/" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" style="background:none;border:none;color:#2b6cb0;cursor:pointer;padding:0;font-size:1em">
+                Log Out
+            </button>
+        </form>
+    </span>
+</nav>
+
+    <p>{{ products|length }} ផលិតផល active ក្នុងប្រព័ន្ធ</p>
+
+    {% for product in products %}
+    <div class="product-card">
+        <div>
+            <h2><a href="/sales/products/{{ product.pk }}/">{{ product.name }}</a></h2>
+            <span class="badge">{{ product.get_category_display }}</span>
+            {% if product.barcode %}
+            <span class="stock">Barcode: {{ product.barcode }}</span>
+            {% endif %}
+        </div>
+        <div style="text-align:right">
+            <p class="price">${{ product.price }}</p>
+            {% if product.stock <= 5 %}
+            <p class="low">⚠️ ស្តុកទាប: {{ product.stock }} នៅសល់</p>
+            {% else %}
+            <p class="stock">ក្នុងស្តុក: {{ product.stock }}</p>
+            {% endif %}
+        </div>
+
+        <!-- រក្សាកូដផ្នែកខាងលើរបស់អ្នកដដែល... -->
+
+    {% for product in products %}
+    <div class="product-card">
+        <div style="display: flex; align-items: center;">
+            <!-- ១. បន្ថែមផ្នែកបង្ហាញរូបភាពនៅខាងឆ្វេង -->
+            <div style="width: 80px; height: 80px; background: #f7fafc; border-radius: 8px; margin-right: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #edf2f7;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                {% else %}
+                    <!-- បង្ហាញពាក្យ No Image បើមិនទាន់បាន Upload រូប -->
+                    <span style="font-size: 10px; color: #cbd5e0;">No Image</span>
+                {% endif %}
+            </div>
+
+            <div>
+                <h2><a href="/sales/products/{{ product.pk }}/">{{ product.name }}</a></h2>
+                <span class="badge">{{ product.get_category_display }}</span>
+                {% if product.barcode %}
+                <span class="stock">Barcode: {{ product.barcode }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="text-align:right">
+            <p class="price">${{ product.price }}</p>
+            {% if product.stock <= 5 %}
+            <p class="low">⚠️ ស្តុកទាប: {{ product.stock }} នៅសល់</p>
+            {% else %}
+            <p class="stock">ក្នុងស្តុក: {{ product.stock }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <!-- ... -->
+    {% endfor %}
+
+<!-- ... -->
+    </div>
+    {% empty %}
+    <p class="empty">មិនទាន់មានផលិតផលទេ — បន្ថែមតាម <a href="/admin/">ផ្ទាំង admin</a>!</p>
+    {% endfor %}
+</body>
+</html>
