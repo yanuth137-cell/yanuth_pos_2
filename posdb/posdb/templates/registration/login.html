@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Staff Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .login-container {
+            background: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-control {
+            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .btn-login {
+            background-color: #2b6cb0;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #1e4e8c;
+        }
+        .footer-copy {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>🛒 POS Staff Login</h2>
+        
+        <form method="POST">
+            {% csrf_token %} <!-- កុំភ្លេចដាក់អាហ្នឹងដើម្បីកុំឱ្យ Error 403 ដូចមិញ -->
+            
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" class="form-control" placeholder="បញ្ចូលឈ្មោះអ្នកប្រើប្រាស់" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" class="form-control" placeholder="បញ្ចូលលេខសម្ងាត់" required>
+            </div>
+
+            <button type="submit" class="btn-login">Log In</button>
+        </form>
+
+        <div class="footer-copy">
+            © 2026 POS System Management
+        </div>
+    </div>
+
+</body>
+</html>
